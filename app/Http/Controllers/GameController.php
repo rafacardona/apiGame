@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Models\Assessment;
 use App\Models\Game;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -106,5 +109,42 @@ class GameController extends Controller
                 'error' => $exception->getMessage()
             ]);
         }
+    }
+
+    public function valorarJuego(Request $request, $idJuego, $idUsuario)
+    {
+        //obtengo juego a valorar
+        $game = Game::find($idJuego);
+
+        //obtengo el usuario a valorar
+        $user = User::find($idUsuario);
+
+        //compruebo si no existe para devolver un error
+        if (!$game) {
+            return response()->json([
+                'message' => 'Game not found'
+            ]);
+        }
+
+        //obtengo los puntos
+        $data = $request->validate([
+            'points' => 'required|int',
+        ]);
+
+        //creo una instancia de assesments
+        $assessment = new Assessment();
+
+        //asigno puntos a la valoracion
+        $assessment->points = $data['points'];
+
+        $assessment->user()->associate($user);
+        $assessment->game()->associate($game);
+        $assessment->save();
+
+        //devuelvo respuesta correcta
+        return response()->json([
+           'message' => 'Valoracion agregada correctamente',
+            'data' => $assessment
+        ]);
     }
 }

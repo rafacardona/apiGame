@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * ESTA NO VALE ESTA CLASE NO VALE NO VALE VALE NO VALE
+     * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('assesments', function (Blueprint $table) {
+        Schema::create('assessments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('game_id');
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assesments');
+        Schema::dropIfExists('assessments');
     }
 };

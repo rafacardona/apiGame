@@ -60,7 +60,7 @@ Route::get('/juegos/delete/{id}', 'App\Http\Controllers\GameController@destroy')
 Route::post('/juegos/crear', 'App\Http\Controllers\GameController@store');
 
 //Ruta para valorar juego
-
+Route::post('/juegos/{idJuego}/valorar/{idUsuario}', 'App\Http\Controllers\GameController@valorarJuego');
 //ruta para comentar juego
 
 //ruta para obtener juego por nombre.
