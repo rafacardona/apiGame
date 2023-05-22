@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -32,20 +33,21 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:8',
+            'rol' => 'required|string'
         ]);
 
         try {
-                //creo usuario en la bd
-                $user = User::create($validatedData);
+            //creo usuario en la bd
+            $user = User::create($validatedData);
 
-                return response()->json([
-                    'message' => 'User created successfully',
-                    'data' => $user,
-                ], 201);
-            }catch (QueryException $exception){
-                return response()->json([
-                    'message' => 'Duplicate entry for email',
-                ], 400);
+            return response()->json([
+                'message' => 'User created successfully',
+                'data' => $user,
+            ], 201);
+        } catch (QueryException $exception) {
+            return response()->json([
+                'message' => 'Duplicate entry for email',
+            ], 400);
         }
     }
 
@@ -59,7 +61,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         //si no hay usuario devuelvo error
-        if(!$user){
+        if (!$user) {
             return response()->json([
                 'message' => 'User not found',
             ], 400);
@@ -67,18 +69,35 @@ class UserController extends Controller
 
         //devuelvo usuario encontrado
         return response()->json([
-           'message' => 'User found succesfully',
+            'message' => 'User found succesfully',
             'data' => $user
         ]);
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
+    public function update(Request $request, $id)
     {
-        //
+        //Validar los datos recibidos
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+        ]);
+
+        //Buscar el usuario a modificar
+        $user = User::find($id);
+
+        //Actualizar los campos
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        $user->password = $validatedData['password'];
+
+        //Guardo el objeto
+        $user->save();
+
+        return response()->json([
+            'message' => $user,
+        ]);
     }
 
     /**
@@ -90,7 +109,7 @@ class UserController extends Controller
         $user = User::find($id);
 
         //si no hay usuario devuelvo error
-        if(!$user){
+        if (!$user) {
             return response()->json([
                 'message' => 'User not found',
             ], 400);
@@ -103,5 +122,28 @@ class UserController extends Controller
         return response()->json([
             'message' => 'User deleted succesfully',
         ], 200);
+    }
+
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => 'required|string|max:255',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = DB::table('users')
+            ->where('email', $credentials['email'])
+            ->where('password', $credentials['password'])
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Credenciales incorrectas',
+            ]);
+        }
+        return response()->json([
+            'message' => 'Bienvenido',
+            'data' => $user,
+        ]);
     }
 }

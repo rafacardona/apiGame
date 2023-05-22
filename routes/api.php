@@ -29,7 +29,9 @@ app()->instance(UserController::class, $userController);
 ///////////////////////////
 /// USUARIO             ///
 ///////////////////////////
-///
+
+//ruta para el login
+Route::post('/login', 'App\Http\Controllers\UserController@login');
 
 //ruta para obtener todos los usuarios
 Route::get('/usuarios', 'App\Http\Controllers\UserController@index');
@@ -40,7 +42,8 @@ Route::get('/usuarios/find/{id}', 'App\Http\Controllers\UserController@show');
 //ruta para crear un usuario
 Route::post('/crearUsuario', 'App\Http\Controllers\UserController@store');
 
-//Ruta para buscar un usuario por su mail
+//Ruta para actualizar un usuario
+Route::get('/usuarios/update/{id}', 'App\Http\Controllers\UserController@update');
 
 //ruta para borrar usuario por su id
 Route::get('/usuarios/delete/{id}', 'App\Http\Controllers\UserController@destroy');
@@ -65,9 +68,15 @@ Route::post('/juegos/{idJuego}/valorar/{idUsuario}', 'App\Http\Controllers\GameC
 //Ruta para eliminar valoracion
 Route::post('/juegos/eliminarValoracion/{idValoracion}', 'App\Http\Controllers\GameController@eliminarValoracion');
 
+//ruta para obtener valoraciones del juego
+Route::post('/juegos/mostrarValoracion/{idJuego}', 'App\Http\Controllers\GameController@mostrarValoracionesJuego');
+
 
 //ruta para comentar juego
 Route::post('/juegos/{idJuego}/comentar/{idUsuario}', 'App\Http\Controllers\GameController@comentarJuego');
+
+//ruta para obtener todos los comentarios de un juego
+Route::post('/juegos/mostrarComentarios/{idJuego}', 'App\Http\Controllers\GameController@mostrarComentariosJuego');
 
 //ruta para eliminar comentario
 Route::post('juegos/eliminarComentario/{idComment}', 'App\Http\Controllers\GameController@eliminarComentario');

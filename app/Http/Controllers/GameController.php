@@ -9,6 +9,7 @@ use App\Models\Game;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class GameController extends Controller
 {
@@ -218,6 +219,25 @@ class GameController extends Controller
 
         return response()->json([
             'message' => 'Comentario eliminado'
+        ]);
+    }
+
+    public function mostrarValoracionesJuego($idJuego){
+        //obtener valoraciones del juego
+        $valoraciones = DB::table('assessments')
+            ->where('game_id', $idJuego)->get();
+        //devuelvo valoraciones
+        return response()->json([
+           'data' => $valoraciones
+        ]);
+    }
+    public function mostrarComentariosJuego($idJuego){
+        //obtener valoraciones del juego
+        $comentarios = DB::table('comments')
+            ->where('game_id', $idJuego)->get();
+        //devuelvo valoraciones
+        return response()->json([
+           'data' => $comentarios
         ]);
     }
 }
