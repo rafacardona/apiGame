@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Assessment;
+use App\Models\Comment;
 use App\Models\Game;
 use App\Models\User;
 use Illuminate\Database\QueryException;
@@ -145,6 +146,78 @@ class GameController extends Controller
         return response()->json([
            'message' => 'Valoracion agregada correctamente',
             'data' => $assessment
+        ]);
+    }
+
+    public function eliminarValoracion($idValoracion){
+        //obtengo Valoracion a eliminar
+        $assessment = Assessment::find($idValoracion);
+
+        if(!$assessment){
+            return response()->json([
+                'message' => 'Valoracion not found'
+            ]);
+        }
+        //elimino valoracion
+        $assessment->delete();
+
+        return response()->json([
+            'message' => 'Valoracion eliminada'
+        ]);
+    }
+
+    public function  comentarJuego(Request $request, $idJuego, $idUsuario)
+    {
+        //obtengo juego a comentar
+        $game = Game::find($idJuego);
+
+        //obtengo el usuario que va a comentar
+        $user = User::find($idUsuario);
+
+        //compruebo si no existe para devolver un error
+        if (!$game) {
+            return response()->json([
+                'message' => 'Game not found'
+            ]);
+        }
+
+        //obtengo el comentario
+        $data = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        //creo una instancia de assesments
+        $comment = new Comment();
+        //asigno comentario al Comentario
+        $comment->text = $data['comment'];
+
+        $comment->user()->associate($user);
+        $comment->game()->associate($game);
+        $comment->save();
+
+        //devuelvo respuesta correcta
+        return response()->json([
+            'message' => 'Comentario agregado correctamente',
+            'data' => $comment
+        ]);
+    }
+
+    public function eliminarComentario(Request $request, $idComment){
+
+        //obtengo comentario a eliminar
+        $comentario =Comment::find($idComment);
+
+        if(!$comentario){
+            return response()->json([
+                'message' => 'Comentario not found'
+            ]);
+        }
+
+        //elimino comentario
+        $comentario->delete();
+
+        return response()->json([
+            'message' => 'Comentario eliminado'
         ]);
     }
 }

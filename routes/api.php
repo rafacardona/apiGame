@@ -61,6 +61,14 @@ Route::post('/juegos/crear', 'App\Http\Controllers\GameController@store');
 
 //Ruta para valorar juego
 Route::post('/juegos/{idJuego}/valorar/{idUsuario}', 'App\Http\Controllers\GameController@valorarJuego');
-//ruta para comentar juego
 
-//ruta para obtener juego por nombre.
+//Ruta para eliminar valoracion
+Route::post('/juegos/eliminarValoracion/{idValoracion}', 'App\Http\Controllers\GameController@eliminarValoracion');
+
+
+//ruta para comentar juego
+Route::post('/juegos/{idJuego}/comentar/{idUsuario}', 'App\Http\Controllers\GameController@comentarJuego');
+
+//ruta para eliminar comentario
+Route::post('juegos/eliminarComentario/{idComment}', 'App\Http\Controllers\GameController@eliminarComentario');
+
