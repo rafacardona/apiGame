@@ -33,7 +33,8 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'rol' => 'required|string'
+            'rol' => 'required|string',
+            'img' => 'required|string',
         ]);
 
         try {
@@ -82,6 +83,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:8',
+            'img' => 'required|string'
         ]);
 
         //Buscar el usuario a modificar
@@ -91,6 +93,7 @@ class UserController extends Controller
         $user->name = $validatedData['name'];
         $user->email = $validatedData['email'];
         $user->password = $validatedData['password'];
+        $user->img = $validatedData['img'];
 
         //Guardo el objeto
         $user->save();
