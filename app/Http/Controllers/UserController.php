@@ -33,7 +33,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'password' => 'required|string|min:8',
-            'rol' => 'required|string',
+            'roll' => 'required|string',
             'img' => 'required|string',
         ]);
 
@@ -48,7 +48,7 @@ class UserController extends Controller
         } catch (QueryException $exception) {
             return response()->json([
                 'message' => 'Duplicate entry for email',
-            ], 400);
+            ]);
         }
     }
 

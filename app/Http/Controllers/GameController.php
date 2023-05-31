@@ -10,7 +10,6 @@ use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
 class GameController extends Controller
 {
     /**
@@ -103,9 +102,8 @@ class GameController extends Controller
             return response()->json([
                 'message' => 'Game deleted succesfully'
             ]);
-
         } catch (\Exception $exception) {
-
+            //devuelvo respuesta con error
             return response()->json([
                 'message' => 'Error deleting game',
                 'error' => $exception->getMessage()
@@ -145,16 +143,17 @@ class GameController extends Controller
 
         //devuelvo respuesta correcta
         return response()->json([
-           'message' => 'Valoracion agregada correctamente',
+            'message' => 'Valoracion agregada correctamente',
             'data' => $assessment
         ]);
     }
 
-    public function eliminarValoracion($idValoracion){
+    public function eliminarValoracion($idValoracion)
+    {
         //obtengo Valoracion a eliminar
         $assessment = Assessment::find($idValoracion);
 
-        if(!$assessment){
+        if (!$assessment) {
             return response()->json([
                 'message' => 'Valoracion not found'
             ]);
@@ -203,12 +202,13 @@ class GameController extends Controller
         ]);
     }
 
-    public function eliminarComentario(Request $request, $idComment){
+    public function eliminarComentario(Request $request, $idComment)
+    {
 
         //obtengo comentario a eliminar
-        $comentario =Comment::find($idComment);
+        $comentario = Comment::find($idComment);
 
-        if(!$comentario){
+        if (!$comentario) {
             return response()->json([
                 'message' => 'Comentario not found'
             ]);
@@ -222,22 +222,39 @@ class GameController extends Controller
         ]);
     }
 
-    public function mostrarValoracionesJuego($idJuego){
+    public function mostrarValoracionesJuego($idJuego)
+    {
         //obtener valoraciones del juego
         $valoraciones = DB::table('assessments')
             ->where('game_id', $idJuego)->get();
         //devuelvo valoraciones
         return response()->json([
-           'data' => $valoraciones
+            'data' => $valoraciones
         ]);
     }
-    public function mostrarComentariosJuego($idJuego){
+
+    public function mostrarComentariosJuego($idJuego)
+    {
         //obtener valoraciones del juego
         $comentarios = DB::table('comments')
             ->where('game_id', $idJuego)->get();
+
+
+        // Crear un nuevo array con los datos necesarios
+        $comentariosConUsuario = [];
+        //recorro lista comentarios
+        foreach ($comentarios as $comentario) {
+
+            $comentariosConUsuario[] = [
+                'comentario' => $comentario,
+                'username' => $comentario->user()->name,
+                'img' => $comentario->user()->img
+            ];
+        }
+
         //devuelvo valoraciones
         return response()->json([
-           'data' => $comentarios
+            'data' => $comentariosConUsuario
         ]);
     }
 }
